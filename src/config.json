@@ -1,4 +1,4 @@
 {
   "isDev": true,
-  "dateFormat": "dd.MM.yyyy"
+  "dateFormat": "dd.MM.yyyy hh:mm:ss"
 }

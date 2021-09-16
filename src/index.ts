@@ -9,6 +9,7 @@ async function main() {
    * Setting of parsers
    */
   mappingTable.set("Анна Лафарг", new models.AnnaLafrag());
+  // mappingTable.set("Barcelonadesign", new models.BarcelonaDesign());
 
   /** ======================================= */
   const suppliers = Array.from(mappingTable.keys());
