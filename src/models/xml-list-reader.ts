@@ -1,7 +1,10 @@
 import { resolve } from "path";
 import { readdir } from "fs";
 import { readFile, utils } from "xlsx";
-import { SupplierMeta, SupplierMetaLocal } from "./dto/supplier-meta.dto";
+import {
+  SupplierMeta,
+  SupplierMetaLocal,
+} from "./public/dto/supplier-meta.dto";
 
 class XMLFileRow {
   supplier: string = "";
@@ -17,19 +20,24 @@ export class XMLListReader {
 
   public supplierMeta = new Map<string, SupplierMeta>();
 
-  constructor() {
-    readdir(this.dirPath, (err, filesRaw: string[]) => {
-      const winFilter = "~$";
-      const files = filesRaw.filter(
-        (fileName) => !fileName.includes(winFilter)
-      );
-      this.xmlListFilePath = files[0] || "";
-      this.prepareList();
+  prepareList() {
+    return new Promise((res, rej) => {
+      readdir(this.dirPath, (err, filesRaw: string[]) => {
+        const winFilter = "~$";
+        const files = filesRaw.filter(
+          (fileName) => !fileName.includes(winFilter)
+        );
+        this.xmlListFilePath = files[0] || "";
+        if (!this.xmlListFilePath) rej("XML list file was not found");
+        else {
+          this.updateSupplierMeta();
+          res("");
+        }
+      });
     });
   }
 
-  prepareList() {
-    if (!this.xmlListFilePath) return;
+  updateSupplierMeta() {
     const wb = readFile(resolve(this.dirPath, this.xmlListFilePath));
     const ws = wb.Sheets[wb.SheetNames[0]];
     const wsAsJson = utils.sheet_to_json(ws, {
