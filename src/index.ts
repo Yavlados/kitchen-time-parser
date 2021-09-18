@@ -8,7 +8,7 @@ async function main() {
   /**
    * Setting of parsers
    */
-  mappingTable.set("Анна Лафарг", new models.AnnaLafrag());
+  mappingTable.set("West Gate", new models.WestGate());
   // mappingTable.set("Barcelonadesign", new models.BarcelonaDesign());
 
   /** ======================================= */

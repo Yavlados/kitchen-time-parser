@@ -1,4 +1,4 @@
-import AnnaLafrag from "./anna-lafrag/anna-lafrag";
+import WestGate from "./west-gate/west-gate";
 import BarcelonaDesign from './barcelona-design/barcelona-design'
 
-export { AnnaLafrag, BarcelonaDesign };
+export { WestGate, BarcelonaDesign };

@@ -45,14 +45,14 @@ export class XMLListReader {
     }) as XMLFileRow[];
     // remove header row
     wsAsJson.shift();
-    const localRow = new SupplierMetaLocal("", "", []);
+    const localRow = new SupplierMetaLocal("", "", new Map<string, number>());
 
     for (let i = 0; i < wsAsJson.length; i++) {
       const row = wsAsJson[i];
       if (row.supplier) {
         if (localRow.key) {
           this.supplierMeta.set(
-            localRow.key,
+            localRow.key.trim(),
             new SupplierMeta(localRow.url, localRow.brands)
           );
           localRow.clear();
@@ -61,7 +61,7 @@ export class XMLListReader {
       }
 
       if (row.url) localRow.url = row.url;
-      localRow.brands.push(row.brand);
+        localRow.brands.set(row.brand.toLowerCase(), 1);
     }
 
     console.log(this.supplierMeta);

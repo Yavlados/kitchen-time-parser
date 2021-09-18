@@ -5,14 +5,14 @@ import { parseString } from "xml2js";
 export default class BarcelonaDesign extends XMLParser {
   constructor() {
     super();
-    this.filePath = resolve(
+    this.dirPath = resolve(
       __dirname,
       "..",
       "..",
       "files",
-      "barcelona-design",
-      "barcelona-priority.xml"
+      "barcelona-design"
     );
+    this.devFileName =  "barcelona-priority.xml"
   }
 
   parsingCallback(data: any) {
