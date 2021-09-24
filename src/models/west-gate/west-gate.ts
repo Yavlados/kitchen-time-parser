@@ -1,5 +1,6 @@
 import XMLParser from "../public/base/xml-parser";
 import { resolve } from "path";
+import { StampActionsEnum } from "../public/base/crawler";
 
 class WestGateRow {
   vendor: string = ''
@@ -33,15 +34,14 @@ export default class WestGate extends XMLParser {
   }
 
   parsingCallback(data: any) {
-    console.log(this.stamp());
-    data;
+    console.log(this.stamp(StampActionsEnum.fetch));
     const offers = data.yml_catalog.shop[0].offers[0].offer
     offers.forEach( (offer:any) => {
       const row = new WestGateRow(offer.vendor, offer.vendorCode, offer.$.available, offer.price)
       if(this.brands.get(row.vendor)) this.parsedData.push(row)
     });
-    console.log(this.parsedData)
-    console.log(this.stamp());
+
+    console.log(this.stamp(StampActionsEnum.fetch));
 
 }
 }

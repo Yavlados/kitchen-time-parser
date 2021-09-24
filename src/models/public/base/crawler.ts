@@ -4,7 +4,14 @@ import { formatTimestamp } from '../../../utils/format-timestamp'
 
 export interface IStamp{
     start: string
-    duration: string
+    duration: string,
+    action: string
+}
+
+export const StampActionsEnum = {
+    fetch: 'Fetching data',
+    parse: 'Parsing of data',
+    error:  'Error has been occured'
 }
 
 
@@ -15,10 +22,11 @@ export abstract class Crawler {
         this.startDate = new Date()
     }
 
-    stamp(): IStamp{
+    stamp(action: string): IStamp{
         return {
             start : format(this.startDate, config.dateFormat),
-            duration: formatTimestamp( this.startDate, new Date() )
+            duration: formatTimestamp( this.startDate, new Date() ),
+            action,
         }
     }
 }
