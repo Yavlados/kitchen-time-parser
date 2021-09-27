@@ -1,14 +1,11 @@
 import XMLParser from "../public/base/xml-parser";
 import { resolve } from "path";
 import { StampActionsEnum } from "../public/base/crawler";
+import { Row } from "../public/base/row";
 
-class WestGateRow {
-  vendor: string = ''
-  vendorCode: string = ''
-  available: number = 0
-  price: string = ''
-
+class WestGateRow extends Row {
   constructor(vendor: string[], vendorCode: string[], available: string, price:string[]){
+    super()
     this.vendor = this.processVendorField(vendor[0])
     this.vendorCode = vendorCode[0].trim()
     this.available = available === 'true' ? 1 : 0
@@ -21,8 +18,6 @@ class WestGateRow {
     return matchingResult ? matchingResult.join(' ') : ''
   }
 }
-
-
 
 export default class WestGate extends XMLParser {
   parsedData: WestGateRow[] = []

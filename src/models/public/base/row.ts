@@ -1,0 +1,8 @@
+import {IRow} from '../dto/row.dto'
+
+export abstract class Row implements IRow {
+    available = 0
+    vendor = ''
+    vendorCode = ''
+    price = ''
+}
