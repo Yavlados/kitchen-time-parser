@@ -4,13 +4,16 @@ import { Crawler } from "./crawler";
 import {decode, encode} from 'iconv-lite'
 import {resolve} from 'path'
 import { parseString } from "xml2js";
+import { Row } from "./row";
 
 export default abstract class XMLParser extends Crawler {
   public url: string;
   public dirPath: string;
   public devFileName: string;
   public brands: Map<string, number>;
+  public brandsNames:string[];
   code: string = 'utf-8'
+  parsedData: Row[] = [];
 
   constructor() {
     super();
@@ -28,6 +31,7 @@ export default abstract class XMLParser extends Crawler {
   bind(url: string, brands: Map<string, number>) {
     this.url = url;
     this.brands = brands;
+    this.brandsNames = [...this.brands.keys()]
   }
 
   async parse() {
@@ -46,6 +50,16 @@ export default abstract class XMLParser extends Crawler {
     });
   }
 
-  abstract parsingCallback(data: object): any;
+  checkIfRowInBrands(row: Row){
+    if (this.brands.get(row.vendor)) {
+      this.parsedData.push(row);
+    } else {
+      const findedBrand = this.brandsNames.find((brandName) =>
+        row.vendor.includes(brandName)
+      );
+      if (findedBrand) this.parsedData.push(row);
+    }
+  }
 
+  abstract parsingCallback(data: object): any;
 }

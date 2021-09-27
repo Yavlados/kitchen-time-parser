@@ -9,8 +9,8 @@ async function main() {
    * Setting of parsers
    */
   // mappingTable.set("West Gate", new models.WestGate());
-  mappingTable.set("Лимарс", new models.Limars());
-  // mappingTable.set("Barcelonadesign", new models.BarcelonaDesign());
+  // mappingTable.set("Лимарс", new models.Limars());
+  mappingTable.set("Barcelonadesign", new models.BarcelonaDesign());
 
   /** ======================================= */
   const suppliers = Array.from(mappingTable.keys());

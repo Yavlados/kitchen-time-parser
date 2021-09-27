@@ -30,8 +30,6 @@ class LimarsRow extends Row {
 }
 
 export default class Limars extends XMLParser {
-  parsedData: LimarsRow[] = [];
-
   constructor() {
     super();
     this.dirPath = resolve(__dirname, "..", "..", "files", "limars");
@@ -49,9 +47,8 @@ export default class Limars extends XMLParser {
         available: offer.$.available,
         price: offer.price,
       });
-      if (this.brands.get(row.vendor)) this.parsedData.push(row);
+      this.checkIfRowInBrands(row)
     });
-    console.log(this.parsedData);
 
     console.log(this.stamp(StampActionsEnum.parse));
   }
