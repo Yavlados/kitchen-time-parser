@@ -5,4 +5,12 @@ export abstract class Row implements IRow {
     vendor = ''
     vendorCode = ''
     price = ''
+    vendorReg = new RegExp(/([a-z])\w+/g);
+
+    constructor(){
+        this.available = 0
+        this.vendor= ''
+        this.vendorCode = ''
+        this.price = ''
+    }
 }

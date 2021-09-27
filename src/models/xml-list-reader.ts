@@ -23,6 +23,7 @@ export class XMLListReader {
   prepareList() {
     return new Promise((res, rej) => {
       readdir(this.dirPath, (err, filesRaw: string[]) => {
+        if(err) rej(err)
         const winFilter = "~$";
         const files = filesRaw.filter(
           (fileName) => !fileName.includes(winFilter)

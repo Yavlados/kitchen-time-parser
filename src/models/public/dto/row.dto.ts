@@ -4,3 +4,10 @@ export interface IRow{
     available: number
     price: string
 }
+
+export interface IRawRow{
+    vendor: string[]
+    vendorCode: string[]
+    available: string
+    price: string[]
+}
