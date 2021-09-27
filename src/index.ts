@@ -10,7 +10,8 @@ async function main() {
    */
   // mappingTable.set("West Gate", new models.WestGate());
   // mappingTable.set("Лимарс", new models.Limars());
-  mappingTable.set("Barcelonadesign", new models.BarcelonaDesign());
+  // mappingTable.set("Barcelonadesign", new models.BarcelonaDesign());
+  mappingTable.set("FineDesign", new models.FineDesign());
 
   /** ======================================= */
   const suppliers = Array.from(mappingTable.keys());
