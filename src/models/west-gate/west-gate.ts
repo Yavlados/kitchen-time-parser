@@ -15,7 +15,7 @@ class WestGateRow extends Row {
   }
 
   processVendorField(vendor: string) {
-    const matchingResult = vendor.trim().toLowerCase().match(this.vendorReg);
+    const matchingResult = vendor.trim().toUpperCase().match(this.vendorReg);
     return matchingResult ? matchingResult.join(" ") : "";
   }
 }

@@ -16,7 +16,7 @@ class FineDesignRow extends Row {
 
   processVendorField(vendor: string): string {
     if (vendor) {
-      const matchingResult = vendor.trim().toLowerCase().match(this.vendorReg);
+      const matchingResult = vendor.trim().toUpperCase().match(this.vendorReg);
       return matchingResult ? matchingResult.join(" ") : "";
     }
     return "";

@@ -16,7 +16,7 @@ class KitchenHoldRow extends Row {
 
   processVendorField(vendor: string): string {
     if (vendor) {
-      const matchingResult = vendor.trim().toLowerCase().match(this.vendorReg);
+      const matchingResult = vendor.trim().toUpperCase().match(this.vendorReg);
       return matchingResult ? matchingResult.join(" ") : "";
     }
     return "";
@@ -24,7 +24,6 @@ class KitchenHoldRow extends Row {
 }
 
 export default class KitchenHold extends XMLParser {
-  //   code = "win1251";
 
   constructor() {
     super();

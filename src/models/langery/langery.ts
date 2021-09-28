@@ -21,7 +21,7 @@ class LangeryRow extends Row {
     const vendorObject = params.find((p) => p.$.name === "Бренд");
     if (vendorObject) {
       const matchingResult = vendorObject._.trim()
-        .toLowerCase()
+        .toUpperCase()
         .match(this.vendorReg);
       return matchingResult ? matchingResult.join(" ") : "";
     }
@@ -30,7 +30,6 @@ class LangeryRow extends Row {
 }
 
 export default class Langery extends XMLParser {
-  //   code = "win1251";
 
   constructor() {
     super();

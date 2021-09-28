@@ -21,7 +21,7 @@ class LimarsRow extends Row {
     const vendorObject = params.find((p) => p.$.name === "Производитель");
     if (vendorObject) {
       const matchingResult = vendorObject._.trim()
-        .toLowerCase()
+        .toUpperCase()
         .match(this.vendorReg);
       return matchingResult ? matchingResult.join(" ") : "";
     }

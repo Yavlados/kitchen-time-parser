@@ -62,7 +62,7 @@ export class XMLListReader {
       }
 
       if (row.url) localRow.url = row.url;
-        localRow.brands.set(row.brand.toLowerCase(), 1);
+        localRow.brands.set(row.brand.toUpperCase(), 1);
     }
 
     console.log(this.supplierMeta);
