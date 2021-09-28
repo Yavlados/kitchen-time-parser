@@ -12,7 +12,8 @@ async function main() {
   // mappingTable.set("Лимарс", new models.Limars());
   // mappingTable.set("Barcelonadesign", new models.BarcelonaDesign());
   // mappingTable.set("FineDesign", new models.FineDesign());
-  mappingTable.set("Kitchen Hold", new models.KitchenHold());
+  // mappingTable.set("Kitchen Hold", new models.KitchenHold());
+  mappingTable.set("Langery", new models.Langery());
 
   /** ======================================= */
   const suppliers = Array.from(mappingTable.keys());
