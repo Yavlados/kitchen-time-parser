@@ -4,5 +4,6 @@ import BarcelonaDesign from "./barcelona-design/barcelona-design";
 import FineDesign from "./fine-design/fine-design";
 import KitchenHold from "./kitchen-hold/kitchen-hold";
 import Langery from "./langery/langery";
+import Nadoba from "./nadoba/nadoba";
 
-export { WestGate, BarcelonaDesign, Limars, FineDesign, KitchenHold, Langery };
+export { WestGate, BarcelonaDesign, Limars, FineDesign, KitchenHold, Langery, Nadoba };

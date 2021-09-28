@@ -13,7 +13,8 @@ async function main() {
   // mappingTable.set("Barcelonadesign", new models.BarcelonaDesign());
   // mappingTable.set("FineDesign", new models.FineDesign());
   // mappingTable.set("Kitchen Hold", new models.KitchenHold());
-  mappingTable.set("Langery", new models.Langery());
+  // mappingTable.set("Langery", new models.Langery());
+  mappingTable.set("Nadoba", new models.Nadoba());
 
   /** ======================================= */
   const suppliers = Array.from(mappingTable.keys());
