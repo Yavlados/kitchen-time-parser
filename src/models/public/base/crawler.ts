@@ -3,6 +3,7 @@ import config from "../../../config.json";
 import { formatTimestamp } from "../../../utils/format-timestamp";
 
 export interface IStamp {
+    caller: string,
   start: string;
   stepTime: string;
   action: string;
@@ -23,13 +24,14 @@ export abstract class Crawler {
   constructor() {
     this.startDate = new Date();
     this.stepDate = this.startDate;
-    this.stamp(StampActionsEnum.start);
+    this.stamp(this.constructor.name, StampActionsEnum.start);
   }
 
-  stamp(action: string): IStamp {
+  stamp(caller:string, action: string): IStamp {
     const stepTime = formatTimestamp(this.stepDate, new Date());
     this.stepDate = new Date();
     return {
+    caller,
       start: format(this.startDate, config.dateFormat),
       stepTime,
       action,

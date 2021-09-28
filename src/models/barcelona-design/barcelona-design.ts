@@ -33,7 +33,7 @@ export default class BarcelonaDesign extends XMLParser {
   }
 
   parsingCallback(data: any) {
-    console.log(this.stamp(StampActionsEnum.fetch));
+    console.log(this.stamp(this.constructor.name,StampActionsEnum.fetch));
 
     const offers = data.yml_catalog.shop[0].offers[0].offer;
     offers.forEach((offer: any) => {
@@ -48,6 +48,6 @@ export default class BarcelonaDesign extends XMLParser {
     });
     console.log(this.parsedData);
 
-    console.log(this.stamp(StampActionsEnum.parse));
+    console.log(this.stamp(this.constructor.name,StampActionsEnum.parse));
   }
 }
