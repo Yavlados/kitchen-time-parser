@@ -51,7 +51,6 @@ export default class Langery extends XMLParser {
 
       this.checkIfRowInBrands(row);
     });
-    console.log(this.parsedData);
     console.log(this.stamp(this.constructor.name, StampActionsEnum.parse));
   }
 }

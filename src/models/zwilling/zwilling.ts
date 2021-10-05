@@ -46,12 +46,7 @@ export default class Zwilling extends XMLParser {
               content += chunk;
             });
             stream.on("end", () => {
-              const dataEnc = decode(content, this.code);
-              parseString(dataEnc, (parsingError, parsingResult) => {
-                if (parsingError)
-                  throw new Error(`Parsing error: ${parsingError}`);
-                this.parsingCallback(parsingResult);
-              });
+              res({ data: content });
             });
           });
         });
