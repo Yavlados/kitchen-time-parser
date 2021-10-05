@@ -19,7 +19,7 @@ export default abstract class XMLParser extends Crawler {
     super();
   }
 
-  async fetch() {
+  async fetch(): Promise<any> {
     const res = await axios.get(this.url, { responseType: "arraybuffer" });
     const dataEnc = decode(res.data, this.code)
     parseString( dataEnc, (parsingError, parsingResult) => {

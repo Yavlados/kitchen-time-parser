@@ -5,5 +5,15 @@ import FineDesign from "./fine-design/fine-design";
 import KitchenHold from "./kitchen-hold/kitchen-hold";
 import Langery from "./langery/langery";
 import Nadoba from "./nadoba/nadoba";
+import Zwilling from "./zwilling/zwilling";
 
-export { WestGate, BarcelonaDesign, Limars, FineDesign, KitchenHold, Langery, Nadoba };
+export {
+  WestGate,
+  BarcelonaDesign,
+  Limars,
+  FineDesign,
+  KitchenHold,
+  Langery,
+  Nadoba,
+  Zwilling,
+};

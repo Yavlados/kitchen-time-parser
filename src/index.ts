@@ -1,7 +1,7 @@
 import { XMLListReader } from "./models/xml-list-reader";
 import XMLParser from "./models/public/base/xml-parser";
 import * as models from "./models";
-import config from './config.json'
+import config from "./config.json";
 
 async function main() {
   const mappingTable = new Map<string, XMLParser>();
@@ -14,7 +14,8 @@ async function main() {
   // mappingTable.set("FineDesign", new models.FineDesign());
   // mappingTable.set("Kitchen Hold", new models.KitchenHold());
   // mappingTable.set("Langery", new models.Langery());
-  mappingTable.set("Nadoba", new models.Nadoba());
+  // mappingTable.set("Nadoba", new models.Nadoba());
+  mappingTable.set("Zwilling", new models.Zwilling());
 
   /** ======================================= */
   const suppliers = Array.from(mappingTable.keys());
@@ -29,9 +30,7 @@ async function main() {
       const meta = list.supplierMeta.get(supplierName);
       parser.bind(meta.url, meta.brands);
 
-        config.isDev
-      ? parser.devParse()
-      : await parser.parse();
+      config.isDev ? parser.devParse() : await parser.parse();
     }
   }
 

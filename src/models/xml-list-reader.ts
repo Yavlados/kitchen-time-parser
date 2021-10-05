@@ -23,7 +23,7 @@ export class XMLListReader {
   prepareList() {
     return new Promise((res, rej) => {
       readdir(this.dirPath, (err, filesRaw: string[]) => {
-        if(err) rej(err)
+        if (err) rej(err);
         const winFilter = "~$";
         const files = filesRaw.filter(
           (fileName) => !fileName.includes(winFilter)
@@ -48,23 +48,33 @@ export class XMLListReader {
     wsAsJson.shift();
     const localRow = new SupplierMetaLocal("", "", new Map<string, number>());
 
-    for (let i = 0; i < wsAsJson.length; i++) {
+    for (let i = 0; i <= wsAsJson.length; i++) {
+      // for adding last row of excel
+      if (i === wsAsJson.length) {
+        this.setNewSupplierMeta(localRow);
+        break;
+      }
+
       const row = wsAsJson[i];
       if (row.supplier) {
         if (localRow.key) {
-          this.supplierMeta.set(
-            localRow.key.trim(),
-            new SupplierMeta(localRow.url, localRow.brands)
-          );
+          this.setNewSupplierMeta(localRow);
           localRow.clear();
         }
         localRow.key = row.supplier;
       }
 
       if (row.url) localRow.url = row.url;
-        localRow.brands.set(row.brand.toUpperCase(), 1);
+      localRow.brands.set(row.brand.toUpperCase(), 1);
     }
 
     console.log(this.supplierMeta);
+  }
+
+  setNewSupplierMeta(localRow: SupplierMetaLocal) {
+    this.supplierMeta.set(
+      localRow.key.trim(),
+      new SupplierMeta(localRow.url, localRow.brands)
+    );
   }
 }
