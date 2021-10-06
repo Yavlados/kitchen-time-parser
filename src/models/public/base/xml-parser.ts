@@ -1,12 +1,12 @@
 import axios from "axios";
 import { readFile } from "fs";
-import { Crawler } from "./crawler";
+import { Logger } from "./crawler";
 import { decode, encode } from "iconv-lite";
 import { resolve } from "path";
 import { parseString } from "xml2js";
 import { Row } from "./row";
 
-export default abstract class XMLParser extends Crawler {
+export default abstract class XMLParser extends Logger {
   public url: string;
   public dirPath: string;
   public devFileName: string;

@@ -17,7 +17,7 @@ export const StampActionsEnum = {
   start: "Server start",
 };
 
-export abstract class Crawler {
+export abstract class Logger {
   startDate: Date = null;
   stepDate: Date = null;
 
