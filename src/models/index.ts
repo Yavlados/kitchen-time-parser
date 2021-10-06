@@ -6,6 +6,7 @@ import KitchenHold from "./kitchen-hold/kitchen-hold";
 import Langery from "./langery/langery";
 import Nadoba from "./nadoba/nadoba";
 import Zwilling from "./zwilling/zwilling";
+import Iris from "./iris/iris";
 
 export {
   WestGate,
@@ -16,4 +17,5 @@ export {
   Langery,
   Nadoba,
   Zwilling,
+  Iris,
 };

@@ -6,6 +6,16 @@ import { resolve } from "path";
 import { parseString } from "xml2js";
 import { Row } from "./row";
 
+export interface IError {
+  error: string;
+  caller: XMLParser;
+}
+
+export interface ParsingResult {
+  result: Row[];
+  caller: XMLParser;
+}
+
 export default abstract class XMLParser extends Logger {
   public url: string;
   public dirPath: string;
@@ -29,7 +39,7 @@ export default abstract class XMLParser extends Logger {
     this.brandsNames = [...this.brands.keys()];
   }
 
-  async parse(): Promise<Row[]> {
+  async parse(): Promise<ParsingResult> {
     return new Promise((resolver, reject) => {
       this.fetch()
         .then((response) => {
@@ -37,33 +47,41 @@ export default abstract class XMLParser extends Logger {
             const dataEnc = decode(response.data, this.code);
             parseString(dataEnc, (parsingError, parsingResult) => {
               if (parsingError)
-                reject(new Error(`Parsing error: ${parsingError}`));
+                reject(this.rejector(`Parsing error: ${parsingError}`));
               resolver(this.parseXML(parsingResult));
             });
           });
         })
         .catch((err) => {
-          console.log(err);
-          return err;
+          reject(this.rejector(err));
         });
     });
   }
 
-  async devParse(): Promise<Row[]> {
-    return new Promise((res, rej) => {
+  async devParse(): Promise<ParsingResult> {
+    return new Promise((res, reject) => {
       readFile(
         resolve(this.dirPath, this.devFileName),
         (readingError, data: Buffer) => {
-          if (readingError) throw new Error(`Reading error: ${readingError}`);
+          if (readingError)
+            reject(this.rejector(`Reading error: ${readingError}`));
 
           const dataEnc = decode(data, this.code);
           parseString(dataEnc, (parsingError, parsingResult) => {
-            if (parsingError) throw new Error(`Parsing error: ${parsingError}`);
+            if (parsingError)
+              reject(this.rejector(`Parsing error: ${parsingError}`));
             res(this.parseXML(parsingResult));
           });
         }
       );
     });
+  }
+
+  rejector(errorMessage: string): IError {
+    return {
+      error: errorMessage,
+      caller: this,
+    };
   }
 
   checkIfRowInBrands(row: Row): void {
@@ -79,8 +97,8 @@ export default abstract class XMLParser extends Logger {
 
   abstract parsingCallback(data: object): any;
 
-  parseXML(data: object) {
+  parseXML(data: object): ParsingResult {
     this.parsingCallback(data);
-    return this.parsedData;
+    return { result: this.parsedData, caller: this };
   }
 }

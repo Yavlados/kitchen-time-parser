@@ -19,6 +19,7 @@ async function main() {
   mappingTable.set("Langery", new models.Langery());
   mappingTable.set("Nadoba", new models.Nadoba());
   mappingTable.set("Zwilling", new models.Zwilling());
+  mappingTable.set("Iris", new models.Iris());
 
   /** ======================================= */
   const suppliers = Array.from(mappingTable.keys());
@@ -36,11 +37,12 @@ async function main() {
       return config.isDev ? parser.devParse() : parser.parse();
     });
 
-    const data = await Promise.all(promises)
+    const data = await Promise.allSettled(promises)
 
-      saveResults(
-       Array.prototype.concat.apply([], data)
-      );
+    data
+      // saveResults(
+      //  Array.prototype.concat.apply([], data)
+      // );
   }
 
   async function saveResults(rows: Row[]) {
