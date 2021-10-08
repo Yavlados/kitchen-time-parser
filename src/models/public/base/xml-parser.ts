@@ -1,6 +1,6 @@
 import axios from "axios";
 import { readFile } from "fs";
-import { Logger } from "./crawler";
+import { Logger } from "./logger";
 import { decode, encode } from "iconv-lite";
 import { resolve } from "path";
 import { parseString } from "xml2js";

@@ -1,9 +1,9 @@
 import { format } from "date-fns";
-import config from "../../../config.json";
+import {Config} from "./config";
 import { formatTimestamp } from "../../../utils/format-timestamp";
 
 export interface IStamp {
-    caller: string,
+  caller: string;
   start: string;
   stepTime: string;
   action: string;
@@ -20,6 +20,7 @@ export const StampActionsEnum = {
 export abstract class Logger {
   startDate: Date = null;
   stepDate: Date = null;
+  static config = new Config();
 
   constructor() {
     this.startDate = new Date();
@@ -27,12 +28,12 @@ export abstract class Logger {
     this.stamp(this.constructor.name, StampActionsEnum.start);
   }
 
-  stamp(caller:string, action: string): IStamp {
+  stamp(caller: string, action: string): IStamp {
     const stepTime = formatTimestamp(this.stepDate, new Date());
     this.stepDate = new Date();
     return {
-    caller,
-      start: format(this.startDate, config.dateFormat),
+      caller,
+      start: format(this.startDate, Logger.config.dateFormat),
       stepTime,
       action,
       uptime: formatTimestamp(this.startDate, new Date()),

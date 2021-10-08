@@ -2,7 +2,7 @@ import { IRawRow } from "../public/dto/row.dto";
 import { Row } from "../public/base/row";
 import XMLParser from "../public/base/xml-parser";
 import { resolve } from "path";
-import { StampActionsEnum } from "../public/base/crawler";
+import { StampActionsEnum } from "../public/base/logger";
 
 class LangeryRow extends Row {
   constructor(d: IRawRow) {

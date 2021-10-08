@@ -1,6 +1,6 @@
 import XMLParser from "../public/base/xml-parser";
 import { resolve } from "path";
-import { StampActionsEnum } from "../public/base/crawler";
+import { StampActionsEnum } from "../public/base/logger";
 import { Row } from "../public/base/row";
 import { IRawRow } from "../public/dto/row.dto";
 

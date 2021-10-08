@@ -1,12 +1,13 @@
 import { XMLListReader } from "./models/xml-list-reader";
-import XMLParser from "./models/public/base/xml-parser";
+import XMLParser, { ParsingResult } from "./models/public/base/xml-parser";
 import * as models from "./models";
-import config from "./config.json";
+import { Config } from "./models/public/base/config";
 import { Row } from "./models/public/base/row";
 import { utils, writeFile } from "xlsx";
 import { resolve } from "path";
 
 async function main() {
+  const config = new Config();
   const mappingTable = new Map<string, XMLParser>();
   /**
    * Setting of parsers
@@ -37,13 +38,15 @@ async function main() {
       return config.isDev ? parser.devParse() : parser.parse();
     });
 
-    const data = await Promise.allSettled(promises)
+    const data = await Promise.allSettled(promises);
 
-    data
-      // saveResults(
-      //  Array.prototype.concat.apply([], data)
-      // );
+    await handleResults(data);
+    // saveResults(
+    //  Array.prototype.concat.apply([], data)
+    // );
   }
+
+  async function handleResults(data: PromiseSettledResult<ParsingResult>[]) {}
 
   async function saveResults(rows: Row[]) {
     const newFilePath = resolve(__dirname, "files", "_result", "result.xlsx");
@@ -51,7 +54,7 @@ async function main() {
     const sheet = utils.json_to_sheet(rows, { header: [] });
     utils.book_append_sheet(newBook, sheet);
     writeFile(newBook, newFilePath);
-    console.log('File was saved')
+    console.log("File was saved");
   }
 
   parseSuppliers();
