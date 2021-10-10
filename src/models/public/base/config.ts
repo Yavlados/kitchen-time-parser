@@ -21,7 +21,7 @@ export class Config {
     Config.instance = this;
   }
 
-  updateConfig() {}
+  // updateConfig() {}
 
   readConfig() {
     const readBuffer = readFileSync(this.configPath);

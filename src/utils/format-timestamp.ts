@@ -1,5 +1,9 @@
 export function formatTimestamp( startDate: Date, nowDate: Date ):string{
     const miliseconds = nowDate.getTime() - startDate.getTime()
+    return convertMiliseconds(miliseconds)
+}
+
+export function convertMiliseconds(miliseconds: number): string {
     const seconds = Math.floor(miliseconds/1000)
 
     const data: any = {seconds, miliseconds: miliseconds % 1000}

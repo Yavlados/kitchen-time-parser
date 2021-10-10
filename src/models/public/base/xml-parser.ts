@@ -5,8 +5,9 @@ import { decode, encode } from "iconv-lite";
 import { resolve } from "path";
 import { parseString } from "xml2js";
 import { Row } from "./row";
+import CircuitBreaker from "./circuit-breaker";
 
-export interface IError {
+export interface ParsingError {
   error: string;
   caller: XMLParser;
 }
@@ -24,8 +25,7 @@ export default abstract class XMLParser {
   public brandsNames: string[];
   code: string = "utf-8";
   parsedData: Row[] = [];
-
-  constructor() {}
+  circuitBreaker: CircuitBreaker
 
   async fetch(): Promise<any> {
     return await axios.get(this.url, { responseType: "arraybuffer" });
@@ -75,7 +75,7 @@ export default abstract class XMLParser {
     });
   }
 
-  rejector(errorMessage: string): IError {
+  rejector(errorMessage: string): ParsingError {
     return {
       error: errorMessage,
       caller: this,
@@ -102,5 +102,14 @@ export default abstract class XMLParser {
 
   stamp(caller: string, action: string) {
     return Logger.stamp(caller, action);
+  }
+
+  runCircuit(): Promise<ParsingResult|ParsingError>{
+    this.circuitBreaker = new CircuitBreaker(this)
+    return this.circuitBreaker.tick()
+  }
+
+  turnOffCircuit(){
+    delete this.circuitBreaker
   }
 }

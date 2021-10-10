@@ -1,41 +1,79 @@
 import { Config } from "./config";
-import XMLParser from "./xml-parser";
+import XMLParser, { ParsingResult, ParsingError } from "./xml-parser";
+import { Logger, StampActionsEnum } from "./logger";
+import { convertMiliseconds } from "../../../utils/format-timestamp";
+import { Row } from "./row";
 
 export default class CircuitBreaker {
   timeOutDuration: number;
   repeatCount: number;
-  parser: XMLParser;
   totalRepeats: number;
   static config = new Config();
+  caller: XMLParser;
 
-  constructor() {
+  constructor(caller: XMLParser) {
     this.timeOutDuration = CircuitBreaker.config.timeOutDuration;
     this.repeatCount = CircuitBreaker.config.repeatCount;
     this.totalRepeats = 0;
+    this.caller = caller;
   }
 
-  async runCircuit() {
-    if (this.totalRepeats <= this.repeatCount) {
-      await this.tick();
-    }
+  // async runCircuit(): Promise<any> {
+  //   if (this.totalRepeats <= this.repeatCount) {
+  //     return await this.tick();
+  //   } else {
+  //     this.turnOff();
+  //     return new Promise((res) => {
+  //       res("");
+  //     });
+  //   }
+  // }
+
+  turnOff() {
+    this.caller.turnOffCircuit();
   }
 
-  tick() {
+  tick(): Promise<ParsingResult | ParsingError> {
     return new Promise((res, rej) => {
       this.totalRepeats += 1;
+      const timeout = this.timeOutDuration * this.totalRepeats;
+
       setTimeout(() => {
         const promise = CircuitBreaker.config.isDev
-          ? this.parser.devParse()
-          : this.parser.parse();
+          ? this.caller.devParse()
+          : this.caller.parse();
         promise
           .then((data) => {
-            res("");
+            Logger.stamp(
+              this.caller.constructor.name,
+              StampActionsEnum.resolved,
+              `Resolved after timeout ${convertMiliseconds(timeout)}`
+            );
+            this.turnOff();
+            res(data);
           })
-          .catch((err) => {
-            this.runCircuit();
-            rej(err);
+          .catch(async (err) => {
+            Logger.stamp(
+              this.caller.constructor.name,
+              StampActionsEnum.reject,
+              `Rejected after timeout ${convertMiliseconds(timeout)}`
+            );
+
+            if (this.totalRepeats <= this.repeatCount) {
+              res(await this.tick());
+            } else {
+              Logger.stamp(
+                this.caller.constructor.name,
+                StampActionsEnum.reject,
+                `Total rejection count is more than limit. ${this.caller.constructor.name} parser will be called on next iteration`
+              );
+              res({
+                error: ':(',
+                caller: this.caller,
+              });
+            }
           });
-      }, this.timeOutDuration * this.totalRepeats);
+      }, timeout);
     });
   }
 }

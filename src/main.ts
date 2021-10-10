@@ -1,5 +1,8 @@
 import { XMLListReader } from "./models/xml-list-reader";
-import XMLParser, { ParsingResult } from "./models/public/base/xml-parser";
+import XMLParser, {
+  ParsingResult,
+  ParsingError,
+} from "./models/public/base/xml-parser";
 import * as models from "./models";
 import { Config } from "./models/public/base/config";
 import { Row } from "./models/public/base/row";
@@ -9,7 +12,7 @@ import { Logger } from "./models/public/base/logger";
 
 async function main() {
   const config = new Config();
-  Logger.initialization()
+  Logger.initialization();
   const mappingTable = new Map<string, XMLParser>();
   /**
    * Setting of parsers
@@ -54,7 +57,20 @@ async function main() {
   }
 
   async function handleFulfilledResults(data: ParsingResult[]) {}
-  async function handleRejectedResults(data: any[]) {}
+
+  async function handleRejectedResults(data: ParsingError[]) {
+    const promises = data.map((d) => d.caller.runCircuit());
+    const awaitedPromises = await Promise.allSettled(promises);
+    console.log(awaitedPromises);
+    const fulfilledResults = awaitedPromises
+      .filter(
+        (pr: PromiseFulfilledResult<ParsingResult | ParsingError>) =>
+          !(pr.value as ParsingError)?.error
+      )
+      .map((ff: PromiseFulfilledResult<ParsingResult>) => ff.value);
+
+    await handleFulfilledResults(fulfilledResults);
+  }
 
   async function saveResults(rows: Row[]) {
     const newFilePath = resolve(__dirname, "files", "_result", "result.xlsx");

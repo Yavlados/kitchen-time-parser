@@ -1,46 +1,34 @@
-import { IRawRow } from "../public/dto/row.dto";
-import { Row } from "../public/base/row";
 import XMLParser from "../public/base/xml-parser";
-import { resolve } from "path";
-import { StampActionsEnum } from "../public/base/logger";
-
-class KitchenHoldRow extends Row {
-  constructor(d: IRawRow) {
-    super();
-    this.vendor = this.processVendorField(d.vendor[0]);
-    this.vendorCode = d.vendorCode[0].trim();
-    this.available = d.available === "true" ? 1 : 0;
-    this.price = `${+d.price[0].trim()}`;
-    delete this.vendorReg;
-  }
-
-  processVendorField(vendor: string): string {
-    if (vendor) {
-      const matchingResult = vendor.trim().toUpperCase().match(this.vendorReg);
-      return matchingResult ? matchingResult.join(" ") : "";
-    }
-    return "";
-  }
-}
 
 export default class Iris extends XMLParser {
+  rejectCount: number;
+  rejectThreshold = 1;
+
   parsingCallback(data: object) {
     throw new Error("Method not implemented.");
   }
 
   constructor() {
     super();
+    this.rejectCount = 0;
   }
 
   devParse() {
-    return new Promise<any>((res, rej) => {
-      rej(this.rejector("err"));
-    });
+    return this.irisParsing();
   }
 
   parse() {
+    return this.irisParsing();
+  }
+
+  irisParsing() {
     return new Promise<any>((res, rej) => {
-      rej("err");
+      if (this.rejectCount <= this.rejectThreshold) {
+        this.rejectCount += 1;
+        rej(this.rejector("err"));
+      } else {
+        res({ result: this.parsedData, caller: this });
+      }
     });
   }
 }
