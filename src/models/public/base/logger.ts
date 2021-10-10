@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import {Config} from "./config";
+import { Config } from "./config";
 import { formatTimestamp } from "../../../utils/format-timestamp";
 
 export interface IStamp {
@@ -18,25 +18,27 @@ export const StampActionsEnum = {
 };
 
 export abstract class Logger {
-  startDate: Date = null;
-  stepDate: Date = null;
+  static startDate: Date = null;
+  static stepDate: Date = null;
   static config = new Config();
 
-  constructor() {
-    this.startDate = new Date();
-    this.stepDate = this.startDate;
-    this.stamp(this.constructor.name, StampActionsEnum.start);
+  static initialization() {
+    Logger.startDate = new Date();
+    Logger.stepDate = Logger.startDate;
+    Logger.stamp(Logger.constructor.name, StampActionsEnum.start);
   }
 
-  stamp(caller: string, action: string): IStamp {
+  static stamp(caller: string, action: string): IStamp {
     const stepTime = formatTimestamp(this.stepDate, new Date());
-    this.stepDate = new Date();
-    return {
+    Logger.stepDate = new Date();
+    const stampData = {
       caller,
       start: format(this.startDate, Logger.config.dateFormat),
       stepTime,
       action,
       uptime: formatTimestamp(this.startDate, new Date()),
     };
+    console.log(stampData);
+    return stampData;
   }
 }

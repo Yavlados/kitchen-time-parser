@@ -5,9 +5,11 @@ import { Config } from "./models/public/base/config";
 import { Row } from "./models/public/base/row";
 import { utils, writeFile } from "xlsx";
 import { resolve } from "path";
+import { Logger } from "./models/public/base/logger";
 
 async function main() {
   const config = new Config();
+  Logger.initialization()
   const mappingTable = new Map<string, XMLParser>();
   /**
    * Setting of parsers
@@ -40,13 +42,19 @@ async function main() {
 
     const data = await Promise.allSettled(promises);
 
-    await handleResults(data);
-    // saveResults(
-    //  Array.prototype.concat.apply([], data)
-    // );
+    const fulfilled = data
+      .filter((pr) => pr.status === "fulfilled")
+      .map((res: PromiseFulfilledResult<ParsingResult>) => res.value);
+    const rejected = data
+      .filter((pr) => pr.status === "rejected")
+      .map((res: PromiseRejectedResult) => res.reason);
+
+    await handleFulfilledResults(fulfilled);
+    await handleRejectedResults(rejected);
   }
 
-  async function handleResults(data: PromiseSettledResult<ParsingResult>[]) {}
+  async function handleFulfilledResults(data: ParsingResult[]) {}
+  async function handleRejectedResults(data: any[]) {}
 
   async function saveResults(rows: Row[]) {
     const newFilePath = resolve(__dirname, "files", "_result", "result.xlsx");

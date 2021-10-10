@@ -32,7 +32,7 @@ export default class KitchenHold extends XMLParser {
   }
 
   parsingCallback(data: any) {
-    console.log(this.stamp(this.constructor.name, StampActionsEnum.fetch));
+    this.stamp(this.constructor.name, StampActionsEnum.fetch);
 
     const offers = data.yml_catalog.shop[0].offers[0].offer;
     offers.forEach((offer: any) => {
@@ -45,6 +45,6 @@ export default class KitchenHold extends XMLParser {
 
       this.checkIfRowInBrands(row);
     });
-    console.log(this.stamp(this.constructor.name, StampActionsEnum.parse));
+    this.stamp(this.constructor.name, StampActionsEnum.parse);
   }
 }

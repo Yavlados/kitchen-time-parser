@@ -17,8 +17,6 @@ export default class CircuitBreaker {
   async runCircuit() {
     if (this.totalRepeats <= this.repeatCount) {
       await this.tick();
-    } else {
-        
     }
   }
 

@@ -16,7 +16,7 @@ export interface ParsingResult {
   caller: XMLParser;
 }
 
-export default abstract class XMLParser extends Logger {
+export default abstract class XMLParser {
   public url: string;
   public dirPath: string;
   public devFileName: string;
@@ -25,9 +25,7 @@ export default abstract class XMLParser extends Logger {
   code: string = "utf-8";
   parsedData: Row[] = [];
 
-  constructor() {
-    super();
-  }
+  constructor() {}
 
   async fetch(): Promise<any> {
     return await axios.get(this.url, { responseType: "arraybuffer" });
@@ -100,5 +98,9 @@ export default abstract class XMLParser extends Logger {
   parseXML(data: object): ParsingResult {
     this.parsingCallback(data);
     return { result: this.parsedData, caller: this };
+  }
+
+  stamp(caller: string, action: string) {
+    return Logger.stamp(caller, action);
   }
 }
