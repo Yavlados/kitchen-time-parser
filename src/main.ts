@@ -1,4 +1,4 @@
-import { XMLListReader } from "./models/xml-list-reader";
+import { XMLListReader } from "./models/public/base/xml-list-reader";
 import XMLParser, {
   ParsingResult,
   ParsingError,
@@ -9,6 +9,10 @@ import { Row } from "./models/public/base/row";
 import { utils, writeFile } from "xlsx";
 import { resolve } from "path";
 import { Logger } from "./models/public/base/logger";
+import {
+  MatchResolver,
+  MetaFileRow,
+} from "./models/public/base/match-resolver";
 
 async function main() {
   const config = new Config();
@@ -52,24 +56,22 @@ async function main() {
       .filter((pr) => pr.status === "rejected")
       .map((res: PromiseRejectedResult) => res.reason);
 
-    await handleFulfilledResults(fulfilled);
-    await handleRejectedResults(rejected);
-    await saveResults(
-      [].concat.apply(
-        [],
-        fulfilled.map((f) => f.result)
-      )
-    );
+    const fullfilledAfterRejection = await handleRejectedResults(rejected);
+    await handleFulfilledResults(fulfilled.concat(...fullfilledAfterRejection));
   }
 
-  async function handleFulfilledResults(data: ParsingResult[]) {
-    data;
+  async function handleFulfilledResults(newData: ParsingResult[]) {
+    const t = new MatchResolver();
+    const { data, meta } = t.processNewRows(newData);
+    await saveResults(data);
+    await saveMeta(meta);
   }
 
-  async function handleRejectedResults(data: ParsingError[]) {
+  async function handleRejectedResults(
+    data: ParsingError[]
+  ): Promise<ParsingResult[]> {
     const promises = data.map((d) => d.caller.runCircuit());
     const awaitedPromises = await Promise.allSettled(promises);
-    console.log(awaitedPromises);
     const fulfilledResults = awaitedPromises
       .filter(
         (pr: PromiseFulfilledResult<ParsingResult | ParsingError>) =>
@@ -77,11 +79,14 @@ async function main() {
       )
       .map((ff: PromiseFulfilledResult<ParsingResult>) => ff.value);
 
-    await handleFulfilledResults(fulfilledResults);
+    return fulfilledResults;
   }
 
   async function saveResults(rows: Row[]) {
-    const newFilePath = resolve(__dirname, "files", "_result", "result.xlsx");
+    const newFilePath = resolve(
+      MatchResolver.resultsFilePath,
+      MatchResolver.resultsFileName
+    );
     const newBook = utils.book_new();
     const sheet = utils.json_to_sheet(rows, {
       header: ["available", "vendor", "vendorCode", "price"],
@@ -89,6 +94,18 @@ async function main() {
     utils.book_append_sheet(newBook, sheet);
     writeFile(newBook, newFilePath);
     console.log("File was saved");
+  }
+
+  async function saveMeta(rows: MetaFileRow[]) {
+    const newFilePath = resolve(
+      MatchResolver.resultsFilePath,
+      MatchResolver.resultsMetaFileName
+    );
+    const newBook = utils.book_new();
+    const sheet = utils.json_to_sheet(rows, { header: ["vendor"] });
+    utils.book_append_sheet(newBook, sheet);
+    writeFile(newBook, newFilePath);
+    console.log("Meta file was saved");
   }
 
   parseSuppliers();

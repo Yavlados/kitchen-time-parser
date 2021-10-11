@@ -1,10 +1,7 @@
 import { resolve } from "path";
 import { readdir } from "fs";
 import { readFile, utils } from "xlsx";
-import {
-  SupplierMeta,
-  SupplierMetaLocal,
-} from "./public/dto/supplier-meta.dto";
+import { SupplierMeta, SupplierMetaLocal } from "../dto/supplier-meta.dto";
 
 class XMLFileRow {
   supplier: string = "";
@@ -14,7 +11,7 @@ class XMLFileRow {
 }
 
 export class XMLListReader {
-  dirPath = resolve(__dirname, "..", "files", "meta", "xml-list");
+  dirPath = resolve(__dirname, "..", "..", "..", "files", "meta", "xml-list");
   xmlListFilePath: string;
   xmlListFileHeaders = Object.keys(new XMLFileRow());
 

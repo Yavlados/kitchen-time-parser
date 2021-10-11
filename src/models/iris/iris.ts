@@ -27,7 +27,7 @@ export default class Iris extends XMLParser {
         this.rejectCount += 1;
         rej(this.rejector("err"));
       } else {
-        res({ result: this.parsedData, caller: this });
+        res({ result: this.parsingResultsMap, caller: this });
       }
     });
   }

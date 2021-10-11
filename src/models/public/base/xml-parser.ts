@@ -13,7 +13,7 @@ export interface ParsingError {
 }
 
 export interface ParsingResult {
-  result: Row[];
+  result: Map<string, Row[]>;
   caller: XMLParser;
 }
 
@@ -25,11 +25,11 @@ export default abstract class XMLParser {
   public brandsNames: string[];
   code: string = "utf-8";
   parsedData: Row[] = [];
-  brandsMap: Map<string, any[]>;
+  parsingResultsMap: Map<string, Row[]>;
   circuitBreaker: CircuitBreaker;
 
   constructor() {
-    this.brandsMap = new Map<string, any[]>();
+    this.parsingResultsMap = new Map<string, Row[]>();
   }
 
   async fetch(): Promise<any> {
@@ -89,34 +89,36 @@ export default abstract class XMLParser {
 
   checkIfRowInBrands(row: Row): void {
     if (this.brands.get(row.vendor)) {
-      this.parsedData.push(row);
-      // this.updateMap(row);
+      // this.parsedData.push(row);
+      this.updateMap(row);
     } else {
       const findedBrand = this.brandsNames.find((brandName) =>
         row.vendor.includes(brandName)
       );
       if (findedBrand) {
-        this.parsedData.push(row);
-        // this.updateMap(row);
+        // this.parsedData.push(row);
+        this.updateMap(row);
       }
     }
   }
 
-  // updateMap(row: Row) {
-  //   let v = this.brandsMap.get(`${row.vendor}:${row.vendorCode}`);
-  //   if (!v) {
-  //     v = [];
-  //     v.push(`${row.vendor}:${row.vendorCode}`);
-  //   }
-  //   v.push(row);
-  //   this.brandsMap.set(`${row.vendor}:${row.vendorCode}`, v);
-  // }
+  updateMap(row: Row) {
+    const k = `${this.constructor.name}:${row.vendor}:${row.vendorCode}`
+    let v = this.parsingResultsMap.get(k);
+    if (!v) {
+      v = [];
+    }
+    v.push(row);
+    this.parsingResultsMap.set(k, v);
+  }
 
   parseXML(data: object): ParsingResult {
     this.parsingCallback(data);
     // const t = Array.from(this.brandsMap.values()).filter((r) => r.length > 2);
-    return { result: this.parsedData, caller: this };
+    return { result: this.parsingResultsMap, caller: this };
   }
+
+
 
   stamp(caller: string, action: string) {
     return Logger.stamp(caller, action);

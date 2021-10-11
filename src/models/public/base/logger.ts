@@ -17,9 +17,10 @@ export const StampActionsEnum = {
   start: "Server start",
   reject: "Request was rejected",
   resolved: "Request was resolved",
+  statistics: "Parsing statistics"
 };
 
-export abstract class Logger {
+export class Logger {
   static startDate: Date = null;
   static stepDate: Date = null;
   static config = new Config();
