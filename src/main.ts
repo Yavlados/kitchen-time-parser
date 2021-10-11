@@ -54,9 +54,17 @@ async function main() {
 
     await handleFulfilledResults(fulfilled);
     await handleRejectedResults(rejected);
+    await saveResults(
+      [].concat.apply(
+        [],
+        fulfilled.map((f) => f.result)
+      )
+    );
   }
 
-  async function handleFulfilledResults(data: ParsingResult[]) {}
+  async function handleFulfilledResults(data: ParsingResult[]) {
+    data;
+  }
 
   async function handleRejectedResults(data: ParsingError[]) {
     const promises = data.map((d) => d.caller.runCircuit());
@@ -75,7 +83,9 @@ async function main() {
   async function saveResults(rows: Row[]) {
     const newFilePath = resolve(__dirname, "files", "_result", "result.xlsx");
     const newBook = utils.book_new();
-    const sheet = utils.json_to_sheet(rows, { header: [] });
+    const sheet = utils.json_to_sheet(rows, {
+      header: ["available", "vendor", "vendorCode", "price"],
+    });
     utils.book_append_sheet(newBook, sheet);
     writeFile(newBook, newFilePath);
     console.log("File was saved");

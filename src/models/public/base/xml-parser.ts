@@ -25,7 +25,12 @@ export default abstract class XMLParser {
   public brandsNames: string[];
   code: string = "utf-8";
   parsedData: Row[] = [];
-  circuitBreaker: CircuitBreaker
+  brandsMap: Map<string, any[]>;
+  circuitBreaker: CircuitBreaker;
+
+  constructor() {
+    this.brandsMap = new Map<string, any[]>();
+  }
 
   async fetch(): Promise<any> {
     return await axios.get(this.url, { responseType: "arraybuffer" });
@@ -85,18 +90,31 @@ export default abstract class XMLParser {
   checkIfRowInBrands(row: Row): void {
     if (this.brands.get(row.vendor)) {
       this.parsedData.push(row);
+      // this.updateMap(row);
     } else {
       const findedBrand = this.brandsNames.find((brandName) =>
         row.vendor.includes(brandName)
       );
-      if (findedBrand) this.parsedData.push(row);
+      if (findedBrand) {
+        this.parsedData.push(row);
+        // this.updateMap(row);
+      }
     }
   }
 
-  abstract parsingCallback(data: object): any;
+  // updateMap(row: Row) {
+  //   let v = this.brandsMap.get(`${row.vendor}:${row.vendorCode}`);
+  //   if (!v) {
+  //     v = [];
+  //     v.push(`${row.vendor}:${row.vendorCode}`);
+  //   }
+  //   v.push(row);
+  //   this.brandsMap.set(`${row.vendor}:${row.vendorCode}`, v);
+  // }
 
   parseXML(data: object): ParsingResult {
     this.parsingCallback(data);
+    // const t = Array.from(this.brandsMap.values()).filter((r) => r.length > 2);
     return { result: this.parsedData, caller: this };
   }
 
@@ -104,12 +122,14 @@ export default abstract class XMLParser {
     return Logger.stamp(caller, action);
   }
 
-  runCircuit(): Promise<ParsingResult|ParsingError>{
-    this.circuitBreaker = new CircuitBreaker(this)
-    return this.circuitBreaker.tick()
+  runCircuit(): Promise<ParsingResult | ParsingError> {
+    this.circuitBreaker = new CircuitBreaker(this);
+    return this.circuitBreaker.tick();
   }
 
-  turnOffCircuit(){
-    delete this.circuitBreaker
+  turnOffCircuit() {
+    delete this.circuitBreaker;
   }
+
+  abstract parsingCallback(data: object): any;
 }
