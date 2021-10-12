@@ -13,10 +13,9 @@ import {
   MatchResolver,
   MetaFileRow,
 } from "./models/public/base/match-resolver";
+import cron from "cron";
 
 async function main() {
-  const config = new Config();
-  Logger.initialization();
   const mappingTable = new Map<string, XMLParser>();
   /**
    * Setting of parsers
@@ -33,12 +32,6 @@ async function main() {
 
   /** ======================================= */
   const suppliers = Array.from(mappingTable.keys());
-
-  // Preparing list of xml-data
-  const list = new XMLListReader();
-  await list
-    .prepareList()
-    .catch((err) => Logger.stamp("main", StampActionsEnum.error, err));
 
   async function parseSuppliers() {
     const promises = suppliers.map((supplierName) => {
@@ -113,4 +106,24 @@ async function main() {
   parseSuppliers();
 }
 
-main();
+const config = new Config();
+Logger.initialization();
+
+// Preparing list of xml-data
+const list = new XMLListReader();
+list
+  .prepareList()
+  .catch((err) => Logger.stamp("main", StampActionsEnum.error, err))
+  .then(() => {
+    const job = new cron.CronJob({
+      cronTime: config.cronTime,
+      onTick: async () => {
+        await main();
+      },
+      start: true,
+      timeZone: "Europe/Moscow",
+      runOnInit: true,
+    });
+
+    job.start();
+  });

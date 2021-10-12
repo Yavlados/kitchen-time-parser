@@ -9,6 +9,7 @@ export interface IConfig {
   repeatCount: number;
   loggerSize: number;
   loggingTimeoutDuration: number;
+  cronTime: string;
 }
 
 export class Config {
@@ -57,5 +58,9 @@ export class Config {
 
   get statisticsDateFormat() {
     return Config.config.statisticsDateFormat;
+  }
+
+  get cronTime(){
+    return Config.config.cronTime;
   }
 }
