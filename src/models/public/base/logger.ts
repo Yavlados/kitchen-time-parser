@@ -143,7 +143,7 @@ export class Logger {
     return new Promise((res, rej) => {
       // remove old files
       readdir(Logger.statistcsFolderPath, (err, files) => {
-        if (files.length > 10) {
+        if (files.length > Logger.config.statisticFilesCount) {
           const filesDateNames = files.map((fileName) => {
             return {
               fileName,

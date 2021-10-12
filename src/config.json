@@ -6,5 +6,6 @@
   "repeatCount": 2,
   "loggerSize": 15,
   "loggingTimeoutDuration": 2000,
-  "cronTime": "10 * * * * *"
+  "cronTime": "10 * * * * *",
+  "statisticFilesCount": 10
 }

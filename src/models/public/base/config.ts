@@ -10,6 +10,7 @@ export interface IConfig {
   loggerSize: number;
   loggingTimeoutDuration: number;
   cronTime: string;
+  statisticFilesCount: number;
 }
 
 export class Config {
@@ -60,7 +61,11 @@ export class Config {
     return Config.config.statisticsDateFormat;
   }
 
-  get cronTime(){
+  get cronTime() {
     return Config.config.cronTime;
+  }
+
+  get statisticFilesCount() {
+    return Config.config.statisticFilesCount;
   }
 }
