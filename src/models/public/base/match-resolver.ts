@@ -25,12 +25,8 @@ export class MatchResolver {
   private oldResultsMatcher: Map<string, Row[]>;
   private meta: MetaFileRow[];
   private resultHeaders = Object.keys(new Row());
-  private brandsMatcher: Map<string, string>;
-  private callerMatcher: Map<string, number>;
 
   constructor() {
-    this.brandsMatcher = new Map<string, string>();
-    this.callerMatcher = new Map<string, number>();
     this.readOldResults();
     this.readMeta();
     this.createOldFileMatcher();
@@ -42,9 +38,9 @@ export class MatchResolver {
   public processNewRows(
     newData: ParsingResult[]
   ): { data: Row[]; meta: MetaFileRow[] } {
-    const forInsert: number[] = [];
-    const forUpdate: number[] = [];
-    const forNonAffect: number[] = [];
+    const forInsert: string[] = [];
+    const forUpdate: string[] = [];
+    const forNonAffect: string[] = [];
     const totalData: Row[] = [];
     const localMeta: MetaFileRow[] = [];
     newData.forEach((p) => {
@@ -57,17 +53,17 @@ export class MatchResolver {
           const r1 = newRows[i];
           const r2 = oldRows && oldRows[i];
           if (!r2) {
-            forInsert.push(0);
+            forInsert.push(key);
           } else if (
             r1.vendorCode === r2.vendorCode &&
             r1.vendor === r2.vendor &&
             r1.price === r2.price &&
             r1.available === r2.available
           ) {
-            forNonAffect.push(0);
+            forNonAffect.push(key);
             oldRows.splice(i, 1);
           } else {
-            forUpdate.push(0);
+            forUpdate.push(key);
             oldRows.splice(i, 1);
           }
           totalData.push(r1);
@@ -77,18 +73,29 @@ export class MatchResolver {
           continue;
         }
       });
+      // if data comes from rejected request after circuit breaker
+      if (!k) {
+        const oldRowKeys = Array.from(
+          this.oldResultsMatcher.keys()
+        ).filter((oldRowKey) =>
+          oldRowKey.startsWith(p.caller.constructor.name)
+        );
+        oldRowKeys.forEach((ork) => {
+          const oldRes = this.oldResultsMatcher.get(ork);
+          oldRes.forEach((r) => {
+            totalData.push(r);
+            forNonAffect.push(ork);
+          });
+        });
+      }
     });
-    Logger.stamp(
+    Logger.createStatisticsReport(
+      { inserted: forInsert, nonAffected: forNonAffect, updated: forUpdate },
+      totalData,
       this.constructor.name,
-      StampActionsEnum.statistics,
-      `Parsing of vendors: ${newData
-        .map((p) => p.caller.constructor.name)
-        .join(", ")}. Statistics: ${forInsert.length} inserted,  ${
-        forNonAffect.length
-      } non affected, ${forUpdate.length} updated,  ${
-        totalData.length
-      } total rows added.`
+      newData.map((p) => p.caller.constructor.name).join(", ")
     );
+
     return { data: totalData, meta: localMeta };
   }
 
@@ -118,7 +125,6 @@ export class MatchResolver {
 
   private createOldFileMatcher() {
     this.oldResultsMatcher = new Map<string, Row[]>();
-    this.meta;
     this.oldResults.forEach((r, i) => {
       const k = `${this.meta[i].vendor}:${r.vendor}:${r.vendorCode}`;
       let v = this.oldResultsMatcher.get(k);

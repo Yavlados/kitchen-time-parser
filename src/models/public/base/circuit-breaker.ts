@@ -18,17 +18,6 @@ export default class CircuitBreaker {
     this.caller = caller;
   }
 
-  // async runCircuit(): Promise<any> {
-  //   if (this.totalRepeats <= this.repeatCount) {
-  //     return await this.tick();
-  //   } else {
-  //     this.turnOff();
-  //     return new Promise((res) => {
-  //       res("");
-  //     });
-  //   }
-  // }
-
   turnOff() {
     this.caller.turnOffCircuit();
   }
@@ -68,12 +57,16 @@ export default class CircuitBreaker {
                 `Total rejection count is more than limit. ${this.caller.constructor.name} parser will be called on next iteration`
               );
               res({
-                error: ':(',
+                result: this.createTemporaryResolveResult(),
                 caller: this.caller,
               });
             }
           });
       }, timeout);
     });
+  }
+
+  createTemporaryResolveResult(): Map<string, Row[]> {
+    return new Map<string, Row[]>();
   }
 }

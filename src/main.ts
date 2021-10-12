@@ -8,7 +8,7 @@ import { Config } from "./models/public/base/config";
 import { Row } from "./models/public/base/row";
 import { utils, writeFile } from "xlsx";
 import { resolve } from "path";
-import { Logger } from "./models/public/base/logger";
+import { Logger, StampActionsEnum } from "./models/public/base/logger";
 import {
   MatchResolver,
   MetaFileRow,
@@ -36,7 +36,9 @@ async function main() {
 
   // Preparing list of xml-data
   const list = new XMLListReader();
-  await list.prepareList().catch((err) => console.log(err));
+  await list
+    .prepareList()
+    .catch((err) => Logger.stamp("main", StampActionsEnum.error, err));
 
   async function parseSuppliers() {
     const promises = suppliers.map((supplierName) => {

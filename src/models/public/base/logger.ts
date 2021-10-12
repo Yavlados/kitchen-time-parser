@@ -1,6 +1,9 @@
 import { format } from "date-fns";
 import { Config } from "./config";
 import { formatTimestamp } from "../../../utils/format-timestamp";
+import { createObjectCsvWriter } from "csv-writer";
+import { resolve } from "path";
+import { Row } from "./row";
 
 export interface IStamp {
   caller: string;
@@ -17,7 +20,7 @@ export const StampActionsEnum = {
   start: "Server start",
   reject: "Request was rejected",
   resolved: "Request was resolved",
-  statistics: "Parsing statistics"
+  statistics: "Parsing statistics",
 };
 
 export class Logger {
@@ -29,6 +32,10 @@ export class Logger {
     Logger.startDate = new Date();
     Logger.stepDate = Logger.startDate;
     Logger.stamp(Logger.constructor.name, StampActionsEnum.start);
+    createObjectCsvWriter({
+      path: resolve(__dirname, "..", "..", "..", "log.csv"),
+      header: [],
+    });
   }
 
   static stamp(caller: string, action: string, message: string = ""): IStamp {
@@ -44,5 +51,19 @@ export class Logger {
     };
     console.log(stampData);
     return stampData;
+  }
+
+  static createStatisticsReport(
+    d: { inserted: string[]; updated: string[]; nonAffected: string[] },
+    total: Row[],
+    caller: string,
+    vendors: string
+  ) {
+    const { inserted, updated, nonAffected } = d;
+    Logger.stamp(
+      caller.constructor.name,
+      StampActionsEnum.statistics,
+      `Parsing of vendors: ${vendors}. Statistics: ${inserted.length} inserted,  ${nonAffected.length} non affected, ${updated.length} updated,  ${total.length} total rows added.`
+    );
   }
 }

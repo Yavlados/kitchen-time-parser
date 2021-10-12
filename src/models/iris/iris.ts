@@ -2,7 +2,7 @@ import XMLParser from "../public/base/xml-parser";
 
 export default class Iris extends XMLParser {
   rejectCount: number;
-  rejectThreshold = 1;
+  rejectThreshold = 10;
 
   parsingCallback(data: object) {
     throw new Error("Method not implemented.");

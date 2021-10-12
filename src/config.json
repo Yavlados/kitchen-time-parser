@@ -2,5 +2,6 @@
   "isDev": true,
   "dateFormat": "dd.MM.yyyy HH:mm:ss",
   "timeOutDuration": 1000,
-  "repeatCount": 2
+  "repeatCount": 2,
+  "loggerSize": 1000
 }

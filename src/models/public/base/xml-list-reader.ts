@@ -65,7 +65,6 @@ export class XMLListReader {
       localRow.brands.set(row.brand.toUpperCase(), 1);
     }
 
-    console.log(this.supplierMeta);
   }
 
   setNewSupplierMeta(localRow: SupplierMetaLocal) {
