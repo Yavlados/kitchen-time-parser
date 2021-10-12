@@ -6,6 +6,8 @@ export interface IConfig {
   dateFormat: string;
   timeOutDuration: number;
   repeatCount: number;
+  loggerSize: number;
+  loggingTimeoutDuration: number
 }
 
 export class Config {
@@ -42,5 +44,13 @@ export class Config {
 
   get repeatCount() {
     return Config.config.repeatCount;
+  }
+
+  get loggerSize() {
+    return Config.config.loggerSize;
+  }
+
+  get loggingTimeoutDuration(){
+    return Config.config.loggingTimeoutDuration;
   }
 }
