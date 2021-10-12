@@ -5,8 +5,8 @@ export interface IConfig {
   isDev: boolean;
   dateFormat: string;
   statisticsDateFormat: string;
-  timeOutDuration: number;
-  repeatCount: number;
+  circuitBreakerTimeOutDuration: number;
+  circuitBreakerRepeatCount: number;
   loggerSize: number;
   loggingTimeoutDuration: number;
   cronTime: string;
@@ -41,12 +41,12 @@ export class Config {
     return Config.config.dateFormat;
   }
 
-  get timeOutDuration() {
-    return Config.config.timeOutDuration;
+  get circuitBreakerTimeOutDuration() {
+    return Config.config.circuitBreakerTimeOutDuration;
   }
 
-  get repeatCount() {
-    return Config.config.repeatCount;
+  get circuitBreakerRepeatCount() {
+    return Config.config.circuitBreakerRepeatCount;
   }
 
   get loggerSize() {

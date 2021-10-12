@@ -1,9 +1,9 @@
 {
-  "isDev": true,
+  "isDev": false,
   "dateFormat": "dd.MM.yyyy_HH:mm:ss",
   "statisticsDateFormat": "dd.MM.yyyy_HH-mm-ss",
-  "timeOutDuration": 1000,
-  "repeatCount": 2,
+  "circuitBreakerTimeOutDuration": 60000,
+  "circuitBreakerRepeatCount": 5,
   "loggerSize": 15,
   "loggingTimeoutDuration": 2000,
   "cronTime": "10 * * * * *",

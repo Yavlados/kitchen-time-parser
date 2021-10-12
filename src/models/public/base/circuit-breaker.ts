@@ -12,8 +12,8 @@ export default class CircuitBreaker {
   caller: XMLParser;
 
   constructor(caller: XMLParser) {
-    this.timeOutDuration = CircuitBreaker.config.timeOutDuration;
-    this.repeatCount = CircuitBreaker.config.repeatCount;
+    this.timeOutDuration = CircuitBreaker.config.circuitBreakerTimeOutDuration;
+    this.repeatCount = CircuitBreaker.config.circuitBreakerRepeatCount;
     this.totalRepeats = 0;
     this.caller = caller;
   }
