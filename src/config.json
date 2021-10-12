@@ -1,8 +1,9 @@
 {
   "isDev": true,
-  "dateFormat": "dd.MM.yyyy HH:mm:ss",
+  "dateFormat": "dd.MM.yyyy_HH:mm:ss",
+  "statisticsDateFormat": "dd.MM.yyyy_HH-mm-ss",
   "timeOutDuration": 1000,
   "repeatCount": 2,
-  "loggerSize": 5,
-  "loggingTimeoutDuration": 100
+  "loggerSize": 15,
+  "loggingTimeoutDuration": 2000
 }

@@ -64,7 +64,7 @@ async function main() {
 
   async function handleFulfilledResults(newData: ParsingResult[]) {
     const t = new MatchResolver();
-    const { data, meta } = t.processNewRows(newData);
+    const { data, meta } = await t.processNewRows(newData);
     await saveResults(data);
     await saveMeta(meta);
   }

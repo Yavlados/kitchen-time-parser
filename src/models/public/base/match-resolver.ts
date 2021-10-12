@@ -35,9 +35,9 @@ export class MatchResolver {
   /**
    * Mutate newData
    */
-  public processNewRows(
+  public async processNewRows(
     newData: ParsingResult[]
-  ): { data: Row[]; meta: MetaFileRow[] } {
+  ): Promise<{ data: Row[]; meta: MetaFileRow[] }> {
     const forInsert: string[] = [];
     const forUpdate: string[] = [];
     const forNonAffect: string[] = [];
@@ -89,7 +89,7 @@ export class MatchResolver {
         });
       }
     });
-    Logger.createStatisticsReport(
+    await Logger.createStatisticsReport(
       { inserted: forInsert, nonAffected: forNonAffect, updated: forUpdate },
       totalData,
       this.constructor.name,

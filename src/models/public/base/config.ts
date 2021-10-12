@@ -4,10 +4,11 @@ import { readFileSync } from "fs";
 export interface IConfig {
   isDev: boolean;
   dateFormat: string;
+  statisticsDateFormat: string;
   timeOutDuration: number;
   repeatCount: number;
   loggerSize: number;
-  loggingTimeoutDuration: number
+  loggingTimeoutDuration: number;
 }
 
 export class Config {
@@ -50,7 +51,11 @@ export class Config {
     return Config.config.loggerSize;
   }
 
-  get loggingTimeoutDuration(){
+  get loggingTimeoutDuration() {
     return Config.config.loggingTimeoutDuration;
+  }
+
+  get statisticsDateFormat() {
+    return Config.config.statisticsDateFormat;
   }
 }
