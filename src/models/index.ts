@@ -7,6 +7,7 @@ import Langery from "./langery/langery";
 import Nadoba from "./nadoba/nadoba";
 import Zwilling from "./zwilling/zwilling";
 import Iris from "./iris/iris";
+import AnnaLafarg from "./anna-lafarg/anna-lafarg";
 
 export {
   WestGate,
@@ -18,4 +19,5 @@ export {
   Nadoba,
   Zwilling,
   Iris,
+  AnnaLafarg
 };

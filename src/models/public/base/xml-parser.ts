@@ -97,12 +97,14 @@ export default abstract class XMLParser {
       );
       if (findedBrand) {
         // this.parsedData.push(row);
+        row.vendor = findedBrand
         this.updateMap(row);
       }
     }
   }
 
   updateMap(row: Row) {
+    row.vendorCode = row.vendorCode.replace(/\s/g, '')
     const k = `${this.constructor.name}:${row.vendor}:${row.vendorCode}`
     let v = this.parsingResultsMap.get(k);
     if (!v) {
@@ -117,8 +119,6 @@ export default abstract class XMLParser {
     // const t = Array.from(this.brandsMap.values()).filter((r) => r.length > 2);
     return { result: this.parsingResultsMap, caller: this };
   }
-
-
 
   stamp(caller: string, action: string) {
     return Logger.stamp(caller, action);

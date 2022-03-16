@@ -8,9 +8,12 @@ import { IRawRow } from "../public/dto/row.dto";
 class BarcelonaDesignRow extends Row {
   constructor(d: IRawRow) {
     super();
+
+    const available = Number(d.available)
+
     this.vendor = this.processVendorField(d.vendor[0]);
     this.vendorCode = d.vendorCode[0].trim();
-    this.available = d.available === "true" ? 1 : 0;
+    this.available =  isNaN(available) ? 0 : available;
     this.price = `${+d.price[0].trim()}`;
     delete this.vendorReg;
   }
@@ -40,7 +43,7 @@ export default class BarcelonaDesign extends XMLParser {
       const row = new BarcelonaDesignRow({
         vendor: offer.vendor,
         vendorCode: offer.vendorCode,
-        available: offer.$.available,
+        available: offer.stock[0],
         price: offer.price,
       });
 

@@ -6,6 +6,6 @@
   "circuitBreakerRepeatCount": 5,
   "loggerSize": 15,
   "loggingTimeoutDuration": 2000,
-  "cronTime": "10 * * * * *",
+  "cronTime": "00 01 * * *",
   "statisticFilesCount": 10
 }

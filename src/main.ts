@@ -28,7 +28,7 @@ async function main() {
   mappingTable.set("Langery", new models.Langery());
   mappingTable.set("Nadoba", new models.Nadoba());
   mappingTable.set("Zwilling", new models.Zwilling());
-  mappingTable.set("Iris", new models.Iris());
+  // mappingTable.set("Anna Lafarg", new models.AnnaLafarg());
 
   /** ======================================= */
   const suppliers = Array.from(mappingTable.keys());

@@ -7,9 +7,10 @@ import { StampActionsEnum } from "../public/base/logger";
 class KitchenHoldRow extends Row {
   constructor(d: IRawRow) {
     super();
+    const available = Number(d.available)
     this.vendor = this.processVendorField(d.vendor[0]);
     this.vendorCode = d.vendorCode[0].trim();
-    this.available = d.available === "true" ? 1 : 0;
+    this.available = isNaN(available) ? 0 : available;
     this.price = `${+d.price[0].trim()}`;
     delete this.vendorReg;
   }
@@ -39,7 +40,7 @@ export default class KitchenHold extends XMLParser {
       const row = new KitchenHoldRow({
         vendor: offer.vendor,
         vendorCode: offer.vendorCode,
-        available: offer.$.available,
+        available: offer.$.available !== 'false' ? (offer?.quantity || ['0'])[0] : '0',
         price: offer.price,
       });
 

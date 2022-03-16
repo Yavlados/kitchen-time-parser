@@ -4,12 +4,20 @@ import XMLParser from "../public/base/xml-parser";
 import { resolve } from "path";
 import { StampActionsEnum } from "../public/base/logger";
 
+interface IParam {
+  _?: string
+  $:{ name: string}
+}
+
 class LangeryRow extends Row {
   constructor(d: IRawRow) {
     super();
+
+    const available = Number(d.available)
+
     this.vendor = this.processVendorField(d.vendor as any[]);
     this.vendorCode = d.vendorCode[0].trim();
-    this.available = d.available === "true" ? 1 : 0;
+    this.available = isNaN(available) ? 0 : available;
     this.price = `${+d.price[0].trim()}`;
     delete this.vendorReg;
   }
@@ -42,10 +50,13 @@ export default class Langery extends XMLParser {
 
     const offers = data.yml_catalog.shop[0].offers[0].offer;
     offers.forEach((offer: any) => {
+
+      const available = ((offer.param.filter( (p: IParam) => `${p.$.name}`.toLowerCase() === 'доступное количество' ) || [{_:'0'}])[0])._
+
       const row = new LangeryRow({
         vendor: offer.param,
         vendorCode: offer.vendorCode,
-        available: offer.$.available,
+        available,
         price: offer.price,
       });
 
