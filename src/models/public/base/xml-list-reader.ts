@@ -36,10 +36,10 @@ export class XMLListReader {
   }
 
   updateSupplierMeta() {
-    const wb = readFile(resolve(this.dirPath, this.xmlListFilePath));
+    const wb = readFile(resolve(this.dirPath, this.xmlListFilePath), { sheetStubs: true });
     const ws = wb.Sheets[wb.SheetNames[0]];
     const wsAsJson = utils.sheet_to_json(ws, {
-      header: this.xmlListFileHeaders,
+      header: this.xmlListFileHeaders
     }) as XMLFileRow[];
     // remove header row
     wsAsJson.shift();
@@ -53,6 +53,8 @@ export class XMLListReader {
       }
 
       const row = wsAsJson[i];
+      if (row.supplier === 'EOF') { continue }
+
       if (row.supplier) {
         if (localRow.key) {
           this.setNewSupplierMeta(localRow);
