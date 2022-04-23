@@ -7,9 +7,15 @@ import { StampActionsEnum } from "../public/base/logger";
 class FineDesignRow extends Row {
   constructor(d: IRawRow) {
     super();
+    let available
+    if(isNaN(parseInt(d.available, 10))) {
+      available = d.available === "true" ? 1 : 0;
+    } else {
+      available = parseInt(d.available, 10)
+    }
     this.vendor = this.processVendorField(d.vendor[0]);
     this.vendorCode = d.vendorCode[0].trim();
-    this.available = d.available === "true" ? 1 : 0;
+    this.available = available
     this.price = `${+d.price[0].trim()}`;
     delete this.vendorReg;
   }
@@ -37,10 +43,11 @@ export default class FineDesign extends XMLParser {
 
     const offers = data.yml_catalog.shop[0].offers[0].offer;
     offers.forEach((offer: any) => {
+      const available = offer.param.find((p: any) => p.$.name === 'stock')?._ || offer.$.available
       const row = new FineDesignRow({
         vendor: offer.vendor,
         vendorCode: offer.vendorCode,
-        available: offer.$.available,
+        available,
         price: offer.price,
       });
 

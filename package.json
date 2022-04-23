@@ -40,7 +40,7 @@
     "tsc": "tsc",
     "build": "npm-run-all clean lint tsc copy-files copy-config copy-log",
     "prestart": "npm run build",
-    "start": "node dist/main.js",
+    "start": "yarn build && node dist/main.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --watch src -e ts,ejs --exec npm run start"
   }

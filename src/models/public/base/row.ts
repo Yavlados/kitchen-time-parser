@@ -5,7 +5,7 @@ export class Row implements IRow {
   vendor = "";
   vendorCode = "";
   price = "";
-  vendorReg = new RegExp(/([A-Z])\w+/g);
+  vendorReg = new RegExp(/([\w_&'-]+)/g);
 
   constructor() {
     this.available = 0;

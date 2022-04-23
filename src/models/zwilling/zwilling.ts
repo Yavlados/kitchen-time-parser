@@ -10,9 +10,16 @@ import { parseString } from "xml2js";
 class ZwillingRow extends Row {
   constructor(d: IRawRow) {
     super();
+    let available
+    if(isNaN(parseInt(d.available, 10))) {
+      available = d.available === "true" ? 1 : 0;
+    } else {
+      available = parseInt(d.available, 10)
+    }
+
     this.vendor = this.processVendorField(d.vendor[0]);
     this.vendorCode = d.vendorCode[0].trim();
-    this.available = d.available === "true" ? 1 : 0;
+    this.available = available;
     this.price = `${+d.price[0].trim()}`;
     delete this.vendorReg;
   }
@@ -65,10 +72,11 @@ export default class Zwilling extends XMLParser {
 
     const offers = data.yml_catalog.shop[0].offers[0].offer;
     offers.forEach((offer: any) => {
+      const available = offer.outlets[0]?.outlet[0]?.$.instock || offer.$.available
       const row = new ZwillingRow({
         vendor: offer.vendor,
-        vendorCode: offer.barcode,
-        available: offer.$.available,
+        vendorCode: offer.model,
+        available,
         price: offer.price,
       });
       this.checkIfRowInBrands(row);

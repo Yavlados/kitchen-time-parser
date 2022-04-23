@@ -15,7 +15,7 @@ import {
 } from "./models/public/base/match-resolver";
 import cron from "cron";
 
-async function main() {
+async function main(list: XMLListReader) {
   const mappingTable = new Map<string, XMLParser>();
   /**
    * Setting of parsers
@@ -108,22 +108,21 @@ async function main() {
 
 const config = new Config();
 Logger.initialization();
-
 // Preparing list of xml-data
-const list = new XMLListReader();
-list
-  .prepareList()
-  .catch((err) => Logger.stamp("main", StampActionsEnum.error, err))
-  .then(() => {
-    const job = new cron.CronJob({
-      cronTime: config.cronTime,
-      onTick: async () => {
-        await main();
-      },
-      start: true,
-      timeZone: "Europe/Moscow",
-      runOnInit: true,
-    });
+const job = new cron.CronJob({
+  cronTime: config.cronTime,
+  onTick: async () => {
+    const list = new XMLListReader();
+    list
+      .prepareList()
+      .catch((err) => Logger.stamp("main", StampActionsEnum.error, err))
+      .then(async () => {
+        await main(list);
+      });
+  },
+  start: true,
+  timeZone: "Europe/Moscow",
+  runOnInit: true,
+});
 
-    job.start();
-  });
+job.start();
