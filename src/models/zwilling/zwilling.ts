@@ -4,17 +4,13 @@ import { StampActionsEnum } from "../public/base/logger";
 import { Row } from "../public/base/row";
 import { IRawRow } from "../public/dto/row.dto";
 import ftp from "ftp";
-import { decode, encode } from "iconv-lite";
-import { parseString } from "xml2js";
 
 class ZwillingRow extends Row {
   constructor(d: IRawRow) {
     super();
-    let available
-    if(isNaN(parseInt(d.available, 10))) {
-      available = d.available === "true" ? 1 : 0;
-    } else {
-      available = parseInt(d.available, 10)
+    let available = parseInt(d.available, 10)
+    if(isNaN(available)) {
+      available = 0;
     }
 
     this.vendor = this.processVendorField(d.vendor[0]);
@@ -72,7 +68,7 @@ export default class Zwilling extends XMLParser {
 
     const offers = data.yml_catalog.shop[0].offers[0].offer;
     offers.forEach((offer: any) => {
-      const available = offer.outlets[0]?.outlet[0]?.$.instock || offer.$.available
+      const available = offer.outlets[0]?.outlet[0]?.$.instock
       const row = new ZwillingRow({
         vendor: offer.vendor,
         vendorCode: offer.model,

@@ -28,6 +28,7 @@ async function main(list: XMLListReader) {
   mappingTable.set("Langery", new models.Langery());
   mappingTable.set("Nadoba", new models.Nadoba());
   mappingTable.set("Zwilling", new models.Zwilling());
+  mappingTable.set("Addwine", new models.Addwine());
   // mappingTable.set("Anna Lafarg", new models.AnnaLafarg());
 
   /** ======================================= */
